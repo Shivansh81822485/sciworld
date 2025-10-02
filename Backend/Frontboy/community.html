@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Community</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff5ff;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 { color: #6a0dad; }
+    .chat-box {
+      width: 90%;
+      max-width: 600px;
+      height: 400px;
+      border: 2px solid #6a0dad;
+      margin: 20px auto;
+      padding: 10px;
+      background: #faf0ff;
+      overflow-y: auto;
+    }
+    .message {
+      text-align: left;
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+      background: #e8d4f7;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+    button {
+      background: #6a0dad;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #8a2be2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Community Chat</h1>
+  <input type="text" id="username" placeholder="Your name (optional)" />
+  <div class="chat-box" id="chat-box">
+    <div class="message">👋 Welcome to the community!</div>
+  </div>
+  <input type="text" id="msgInput" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const input = document.getElementById("msgInput");
+    const chatBox = document.getElementById("chat-box");
+    const usernameInput = document.getElementById("username");
+
+    // Load saved messages
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem("chatMessages")) || [];
+      saved.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.textContent = msg;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    function sendMessage() {
+      if (input.value.trim() !== "") {
+        const name = usernameInput.value.trim();
+        const time = new Date().toLocaleTimeString();
+        const content = name ? `${name} @ ${time}: ${input.value}` : `Anonymous @ ${time}: ${input.value}`;
+        const msg = document.createElement("div");
+        msg.className = "message";
+        msg.textContent = content;
+        chatBox.appendChild(msg);
+        input.value = "";
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Save to localStorage
+        const saved = JSON.parse(localStorage.getItem("chatMessages")) || [];
+        saved.push(content);
+        localStorage.setItem("chatMessages", JSON.stringify(saved));
+      }
+    }
+
+    input.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>s
